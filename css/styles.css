@@ -1,0 +1,54 @@
+results,
+.game-field {
+  border: 1px solid grey;
+}
+
+.game-field {
+  position: relative;
+  width: 60%;
+  height: 600px;
+  float: left;
+}
+.results {
+  width: 30%;
+  height: 600px;
+  float: right;
+  padding: 0 15px 0 30px;
+  list-style: decimal;
+  overflow-y: auto;
+}
+
+.game-block {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: green;
+  border: 1px solid blue;
+}
+
+.hidden {
+  display: none;
+}
+
+.control-button {
+  width: 120px;
+}
+
+.points-block,
+.buttons-block,
+.time-block {
+  display: inline-block;
+}
+
+.points-block {
+  padding: 0 30px;
+}
+
+.points-block .form-control {
+  width: 60px;
+  display: inline-block;
+}
+
+.game-controls {
+  padding: 20px 0;
+}

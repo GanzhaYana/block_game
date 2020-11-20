@@ -33,7 +33,7 @@
 
             <div class="points-block">
                 <label for="points">Points</label>
-                <input type="text" value=0 class="form-control" id="points">
+                <input type="text" value=0 disabled="disabled" class="form-control" id="points">
             </div>
             <div class="time-block">
                 <span for="time-remaining">Time left</span>
@@ -44,7 +44,7 @@
 
     <div class="row">
         <div class="col-sm">
-            <div class="game-field"></div>
+            <div class="game-field" data-role="game-field"></div>
             <ul class="results">
                 <li class="hidden user-result-item">
                     User: <span class="user-name"></span> take <span></span> points
@@ -61,6 +61,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
         crossorigin="anonymous"></script>
+<script src="js/jquery.plugin.js"></script>
+<script src="js/jquery.countdown.js"></script>
 <script src="js/scripts.js"></script>
 </body>
 </html>

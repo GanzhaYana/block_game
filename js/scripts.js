@@ -2,6 +2,10 @@ $(document).on("click", "#start-button", function (event) {
   start(event);
 });
 
+$(document).on("click", "#pause-button", function(event) {
+  pause(event);
+});
+
 function start(event) {
   const blocksCountOnStart = 30;
   const gameTime = 60;
@@ -9,6 +13,7 @@ function start(event) {
   $('#pause-button').show();
   addCubes(blocksCountOnStart);
   startTimer(gameTime);
+  initClickHandler();
 }
 
 function addCubes(count) {
@@ -32,6 +37,34 @@ function addCube() {
   gameCube.css('top', getRandomInt(gameFieldHeight) + 'px');
   gameCube.css('left', getRandomInt(gameFieldWidth) + 'px');
   gameField.append(gameCube);
+}
+
+function pause (event) {
+  var button = $(event.currentTarget);
+  if (button.text() === 'Pause') {
+    button.text('Resume');
+    $('#time-remaining').countdown('pause');
+    disableClickHandler()
+  } else {
+    button.text('Pause');
+    $('#time-remaining').countdown('resume');
+    initClickHandler();
+  }
+}
+
+function initClickHandler () {
+  $(document).on("click", '[data-role="game-block"]', function (event) {
+    $(event.currentTarget).remove();
+    const currentPoints = $('#points').val();
+    $('#points').val(parseInt(currentPoints) + 1);
+    if ($('[data-role="game-block"]').length < 25) {
+      addCubes(getRandomInt(3));
+    }
+  });
+}
+
+function disableClickHandler () {
+  $(document).off('click', '[data-role="game-block"]')
 }
 
 function getRandomInt(max) {

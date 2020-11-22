@@ -44,15 +44,37 @@
 
     <div class="row">
         <div class="col-sm">
-            <div class="game-field" data-role="game-field"></div>
-            <ul class="results">
-                <li class="hidden user-result-item">
-                    User: <span class="user-name"></span> take <span></span> points
+            <div class="game-field" id="game-field"></div>
+            <ul class="results" id="results">
+                <li class="hidden user-result-item" data-role="blank-user-rating">
+                    User: <span class="user-name" data-role="user-name"></span> take <span data-role="user-score"></span> points
                 </li>
             </ul>
         </div>
     </div>
 
+
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Your score: <span id="final-score">0</span></h5>
+                </div>
+
+                <div class="modal-body" id="score-form">
+                    <label for="player-name">Name</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="player-name" required minlength="1">
+                        <div class="invalid-feedback">Please provide a valid name.</div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="save-score">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

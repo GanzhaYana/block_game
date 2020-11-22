@@ -24,7 +24,7 @@ function addCubes(count) {
 }
 
 function addCube() {
-  const gameField = $("[data-role='game-field']");
+  const gameField = $('#game-field');
   const cubeFaceLength = 60;
   const gameFieldWidth = gameField.width() - cubeFaceLength;
   const gameFieldHeight = gameField.height() - cubeFaceLength;
@@ -87,6 +87,33 @@ function initTimer() {
   });
 }
 
-function finishGame() {}
+function finishGame() {
+  $('#player-name').val('');
+  $('.modal').modal({ backdrop: 'static', keyboard: false });
+  $('#final-score').text($('#points').val());
+  $('#pause-button').hide();
+  disableClickHandler();
+}
+
+function saveScore (playerName) {
+  $('.modal').modal('hide');
+  var results = $('#results');
+  var userNameField = $("[data-role='blank-user-rating']").clone();
+  userNameField.removeClass('hidden');
+  userNameField.attr('data-role', 'user-rating');
+  userNameField.find("[data-role='user-name']").text(playerName);
+  userNameField.find("[data-role='user-score']").text($('#points').val());
+  results.append(userNameField);
+  $('#score-form').removeClass('was-validated');
+}
+
+$(document).on("click", '#save-score', function() {
+  var playerName = $('#player-name').val();
+  if (playerName.length > 1) {
+    saveScore(playerName)
+  } else {
+    $('#score-form').addClass('was-validated');
+  }
+});
 
 initTimer();

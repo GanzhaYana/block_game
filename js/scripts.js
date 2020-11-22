@@ -1,3 +1,20 @@
+const gameTime = 60;
+const blocksCountOnStart = 30;
+const cubeFaceLength = 60;
+const colours = ['red', 'blue', 'gray', 'green', 'yellow', 'orange'];
+const gameField = $('#game-field');
+const gameFieldHeight = gameField.height() - cubeFaceLength;
+const gameFieldWidth = gameField.width() - cubeFaceLength;
+const playerNameInput = $('#player-name');
+const scoreForm = $('#score-form');
+const pauseButton = $('#pause-button');
+const timeRemainingField = $('#time-remaining');
+const pointsField = $('#points');
+const finalScoreField = $('#final-score');
+const modalWindow = $('.modal');
+const startButton = $('#start-button');
+const results = $('#results');
+
 $(document).on("click", "#start-button", function (event) {
   start(event);
 });
@@ -6,13 +23,24 @@ $(document).on("click", "#pause-button", function(event) {
   pause(event);
 });
 
+$(document).on("click", "#new-game", function() {
+  newGame();
+});
+
+$(document).on("click", '#save-score', function() {
+  var playerName = playerNameInput.val();
+  if (playerName.length > 1) {
+    saveScore(playerName);
+  } else {
+    scoreForm.addClass('was-validated');
+  }
+});
+
 function start(event) {
-  const blocksCountOnStart = 30;
-  const gameTime = 60;
   $(event.currentTarget).hide();
-  $('#pause-button').show();
+  pauseButton.show();
   addCubes(blocksCountOnStart);
-  startTimer(gameTime);
+  startTimer();
   initClickHandler();
 }
 
@@ -24,11 +52,6 @@ function addCubes(count) {
 }
 
 function addCube() {
-  const gameField = $('#game-field');
-  const cubeFaceLength = 60;
-  const gameFieldWidth = gameField.width() - cubeFaceLength;
-  const gameFieldHeight = gameField.height() - cubeFaceLength;
-  const colours = ['red', 'blue', 'gray', 'green', 'yellow', 'orange'];
   const colour = colours[getRandomInt(colours.length)];
   var gameCube = $(document.createElement('div'));
   gameCube.addClass('game-block');
@@ -43,11 +66,11 @@ function pause (event) {
   var button = $(event.currentTarget);
   if (button.text() === 'Pause') {
     button.text('Resume');
-    $('#time-remaining').countdown('pause');
-    disableClickHandler()
+    timeRemainingField.countdown('pause');
+    disableClickHandler();
   } else {
     button.text('Pause');
-    $('#time-remaining').countdown('resume');
+    timeRemainingField.countdown('resume');
     initClickHandler();
   }
 }
@@ -55,65 +78,63 @@ function pause (event) {
 function initClickHandler () {
   $(document).on("click", '[data-role="game-block"]', function (event) {
     $(event.currentTarget).remove();
-    const currentPoints = $('#points').val();
-    $('#points').val(parseInt(currentPoints) + 1);
-    if ($('[data-role="game-block"]').length < 25) {
-      addCubes(getRandomInt(3));
-    }
+    const currentPoints = pointsField.val();
+    pointsField.val(parseInt(currentPoints) + 1);
+    if ($('[data-role="game-block"]').length < 25) { addCubes(getRandomInt(3)); }
   });
 }
 
 function disableClickHandler () {
-  $(document).off('click', '[data-role="game-block"]')
+  $(document).off('click', '[data-role="game-block"]');
 }
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-function startTimer(gameTime) {
-  var initialTimerTime = new Date();
-  const timer = $('#time-remaining');
-  initialTimerTime.setSeconds(initialTimerTime.getSeconds() + gameTime);
-  timer.countdown('resume');
-  timer.countdown('option', {until: initialTimerTime});
+function startTimer() {
+  timeRemainingField.countdown('resume');
+}
+
+function restoreTimer() {
+  timeRemainingField.countdown('option', { until: gameTime }).countdown('pause');
 }
 
 function initTimer() {
-  $('#time-remaining').countdown({
+  timeRemainingField.countdown({
     compact: true,
     format: 'MS',
-    onExpiry: finishGame
-  });
+    onExpiry: finishGame,
+    until: gameTime
+  }).countdown('pause');
 }
 
 function finishGame() {
-  $('#player-name').val('');
-  $('.modal').modal({ backdrop: 'static', keyboard: false });
-  $('#final-score').text($('#points').val());
-  $('#pause-button').hide();
+  playerNameInput.val('');
+  modalWindow.modal({ backdrop: 'static', keyboard: false });
+  finalScoreField.text(pointsField.val());
+  pauseButton.hide();
   disableClickHandler();
 }
 
 function saveScore (playerName) {
-  $('.modal').modal('hide');
-  var results = $('#results');
+  modalWindow.modal('hide');
   var userNameField = $("[data-role='blank-user-rating']").clone();
   userNameField.removeClass('hidden');
   userNameField.attr('data-role', 'user-rating');
   userNameField.find("[data-role='user-name']").text(playerName);
-  userNameField.find("[data-role='user-score']").text($('#points').val());
+  userNameField.find("[data-role='user-score']").text(pointsField.val());
   results.append(userNameField);
-  $('#score-form').removeClass('was-validated');
+  scoreForm.removeClass('was-validated');
 }
 
-$(document).on("click", '#save-score', function() {
-  var playerName = $('#player-name').val();
-  if (playerName.length > 1) {
-    saveScore(playerName)
-  } else {
-    $('#score-form').addClass('was-validated');
-  }
-});
+function newGame () {
+  restoreTimer();
+  pauseButton.hide();
+  startButton.show();
+  pointsField.val(0);
+  gameField.find('[data-role="game-block"]').remove();
+  disableClickHandler();
+}
 
 initTimer();
